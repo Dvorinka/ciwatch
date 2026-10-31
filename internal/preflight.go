@@ -107,7 +107,7 @@ func Preflight(cfg Config, opts PreflightOpts, out io.Writer) int {
 		opts.Root = "."
 	}
 	if len(cfg.Checks) == 0 {
-		fmt.Fprintln(out, "no preflight checks configured (.cix.yml)")
+		fmt.Fprintln(out, "no preflight checks configured (.ciwatch.yml)")
 		return 0
 	}
 	files, err := changedFiles(opts.Root, opts.Base, opts.Files)

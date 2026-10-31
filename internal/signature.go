@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Failure signatures let cix recognize a failure it has seen before.
+// Failure signatures let ciwatch recognize a failure it has seen before.
 // Normalization strips everything that varies between runs: paths,
 // timestamps, SHAs, versions, line numbers, addresses.
 
@@ -56,7 +56,7 @@ var classifiers = []struct {
 	{regexp.MustCompile(`(?i)##\[error\]`), "gha"},
 }
 
-// SigRule is a user-configured signature override from .cix.yml — match a
+// SigRule is a user-configured signature override from .ciwatch.yml — match a
 // project-specific failure mode to a stable name.
 type SigRule struct {
 	Match string `yaml:"match"`

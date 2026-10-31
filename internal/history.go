@@ -33,14 +33,14 @@ type JobStat struct {
 	LastTS         string `json:"last_ts"`
 }
 
-// HistoryPath returns ${XDG_DATA_HOME:-~/.local/share}/cix/history.jsonl.
+// HistoryPath returns ${XDG_DATA_HOME:-~/.local/share}/ciwatch/history.jsonl.
 func HistoryPath() string {
 	base := os.Getenv("XDG_DATA_HOME")
 	if base == "" {
 		home, _ := os.UserHomeDir()
 		base = filepath.Join(home, ".local", "share")
 	}
-	return filepath.Join(base, "cix", "history.jsonl")
+	return filepath.Join(base, "ciwatch", "history.jsonl")
 }
 
 // AppendHistory writes one JSON line to the history file.

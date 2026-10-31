@@ -1,4 +1,4 @@
-<h1 align="center">cix</h1>
+<h1 align="center">ciwatch</h1>
 
 <p align="center">
   A CI companion CLI for coding agents.<br>
@@ -13,26 +13,26 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Dvorinka/cix/actions/workflows/ci.yml"><img src="https://github.com/Dvorinka/cix/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/Dvorinka/cix/releases"><img src="https://img.shields.io/github/v/release/Dvorinka/cix" alt="Release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/Dvorinka/cix" alt="License"></a>
+  <a href="https://github.com/Dvorinka/ciwatch/actions/workflows/ci.yml"><img src="https://github.com/Dvorinka/ciwatch/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Dvorinka/ciwatch/releases"><img src="https://img.shields.io/github/v/release/Dvorinka/ciwatch" alt="Release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Dvorinka/ciwatch" alt="License"></a>
 </p>
 
-## What is cix?
+## What is ciwatch?
 
-cix is a single-binary Go CLI that sits between an agent (or a human) and
+ciwatch is a single-binary Go CLI that sits between an agent (or a human) and
 GitHub Actions. It exists because the agent↔CI loop is broken in three
 places:
 
 1. **Waiting.** Agents poll `gh run watch` / `gh run list` repeatedly,
-   burning context and wall-clock on "still running". `cix wait` replaces
+   burning context and wall-clock on "still running". `ciwatch wait` replaces
    that with one backgroundable process that exits once, with a
    structured result.
 2. **Unnecessary CI cycles.** Pushing a branch whose failure was locally
-   detectable. `cix preflight` maps changed paths to local equivalent
+   detectable. `ciwatch preflight` maps changed paths to local equivalent
    checks and runs them before the push leaves the machine.
 3. **"It failed before."** Failure memory lives in scrollback nobody
-   reads. `cix` stores failure signatures and surfaces prior occurrences
+   reads. `ciwatch` stores failure signatures and surfaces prior occurrences
    — `previous_occurrence: run 17321`.
 
 GitHub Actions only, via the `gh` CLI. No daemon, no MCP server, no
@@ -40,26 +40,26 @@ LLM summarization, no web UI. One-shot binary, JSONL history, done.
 
 ## Features
 
-- **`cix wait`** — resolves the run by `head_sha` (tags included), polls
+- **`ciwatch wait`** — resolves the run by `head_sha` (tags included), polls
   the jobs API with backoff, exits early on a *gating* failure with the
   failing step's log slice, its signature, and where it failed before.
   Never fetches logs for running jobs.
 - **Deploy-path awareness** — parses the workflow's `needs:` graph
   (`string` or list, matrix suffixes stripped). Non-gating failures are
   warnings: `deploy ✓ · mobile ✗ (non-blocking)` exits `1`, not `2`.
-- **`cix push`** — `git push`, find the triggered run, optionally
+- **`ciwatch push`** — `git push`, find the triggered run, optionally
   `--cancel-superseded` (skipped silently when the workflow already has
   a `concurrency:` group — never fights GitHub's own mechanism), then
   wait.
-- **`cix preflight`** — `.cix.yml` maps path globs to local commands;
+- **`ciwatch preflight`** — `.ciwatch.yml` maps path globs to local commands;
   only checks matching the actual diff run. Fail-fast, `--all` to
   override.
-- **`cix history`** — append-only `history.jsonl` per repo gives
+- **`ciwatch history`** — append-only `history.jsonl` per repo gives
   per-job p50/p90 durations, last conclusion, and signature lookup.
   A running job past its p90 gets a `longer than usual` marker.
-- **`cix status`** — one-shot structured snapshot for agents that poll
+- **`ciwatch status`** — one-shot structured snapshot for agents that poll
   themselves anyway.
-- **Verify hook** — `.cix.yml` `verify:` runs after a green run, because
+- **Verify hook** — `.ciwatch.yml` `verify:` runs after a green run, because
   CI green is not the same as deployed-and-healthy.
 - **Release artifact gate** — a green `mobile` job is not proof of a
   production build. Checks the workflow ran `bundleRelease` (not
@@ -75,24 +75,24 @@ repo. Go 1.23+.
 
 ```bash
 # one-liner — latest release binary to ~/.local/bin
-curl -fsSL https://raw.githubusercontent.com/Dvorinka/cix/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Dvorinka/ciwatch/main/install.sh | sh
 
 # or from source
-go install github.com/Dvorinka/cix/cmd/cix@latest
+go install github.com/Dvorinka/ciwatch/cmd/ciwatch@latest
 ```
 
 ```bash
-cix push                  # git push, find the run, wait for it
-cix wait                  # wait on newest run for HEAD
-cix wait --job deploy     # wait on one gate job only
-cix status --ref main     # one-shot snapshot
-cix preflight             # run checks matching the pending diff
-cix history --failures    # what failed before
+ciwatch push                  # git push, find the run, wait for it
+ciwatch wait                  # wait on newest run for HEAD
+ciwatch wait --job deploy     # wait on one gate job only
+ciwatch status --ref main     # one-shot snapshot
+ciwatch preflight             # run checks matching the pending diff
+ciwatch history --failures    # what failed before
 ```
 
 ## Commands
 
-### `cix wait [run-id | --ref <ref>]`
+### `ciwatch wait [run-id | --ref <ref>]`
 
 The reason the tool exists. Run resolution is `head_sha` first (the
 reliable matcher for both branch and tag pushes), with ref-name fallback
@@ -112,31 +112,31 @@ Flags: `--job <name>` · `--timeout 45m` · `--json` · `--rerun-flaky`
 timeouts; compile and test failures are never transient) · `--notify` ·
 `--artifact <path>` · `--gate <job>`.
 
-### `cix push [--tag <v>] [--cancel-superseded] [wait flags]`
+### `ciwatch push [--tag <v>] [--cancel-superseded] [wait flags]`
 
 Pushes, finds the triggered run (head_sha — works for tags), optionally
 cancels earlier in-progress runs for the same sha, then waits.
 
-### `cix status [--ref <ref>] [--run <id>] [--json]`
+### `ciwatch status [--ref <ref>] [--run <id>] [--json]`
 
 Non-blocking snapshot: per-job status, elapsed time, p90 overage markers.
 
-### `cix preflight [--base <ref>] [--files a,b] [--all] [--json]`
+### `ciwatch preflight [--base <ref>] [--files a,b] [--all] [--json]`
 
 Diffs `HEAD` against the base (default `origin/HEAD`), runs only the
 checks whose path globs match. A failed required check exits `2` —
 the push never happens.
 
-### `cix history [--job <name>] [--failures] [--json]`
+### `ciwatch history [--job <name>] [--failures] [--json]`
 
 Local failure/duration memory from `history.jsonl`.
 
-`cix version` prints the binary version.
-`cix completion <bash|zsh|fish>` prints a completion script.
+`ciwatch version` prints the binary version.
+`ciwatch completion <bash|zsh|fish>` prints a completion script.
 
 ## Configuration
 
-`.cix.yml` at the repo root — all sections optional:
+`.ciwatch.yml` at the repo root — all sections optional:
 
 ```yaml
 checks:
@@ -186,7 +186,7 @@ signatures:
 
 ## JSON output
 
-`cix wait --json` on a gating failure:
+`ciwatch wait --json` on a gating failure:
 
 ```json
 {
@@ -205,7 +205,7 @@ signatures:
 }
 ```
 
-History lives at `${XDG_DATA_HOME:-~/.local/share}/cix/history.jsonl` —
+History lives at `${XDG_DATA_HOME:-~/.local/share}/ciwatch/history.jsonl` —
 append-only JSONL, one record per observed job outcome. No sqlite, no
 external service.
 
@@ -214,7 +214,7 @@ external service.
 - No daemon, no MCP server, no web UI, no LLM log summarization.
 - GitHub Actions only — no GitLab/Gitea in v1.
 - No CI duration prediction beyond historical p90 reporting.
-- `cix` does not run logs through a model; it slices them.
+- `ciwatch` does not run logs through a model; it slices them.
 
 ## Development
 

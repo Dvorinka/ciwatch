@@ -7,7 +7,7 @@ import (
 	"sort"
 )
 
-// HistoryOpts controls `cix history`.
+// HistoryOpts controls `ciwatch history`.
 type HistoryOpts struct {
 	Job      string
 	Failures bool
@@ -23,7 +23,7 @@ func History(opts HistoryOpts, out io.Writer) int {
 	}
 	recs := ReadHistoryFrom(path)
 	if len(recs) == 0 {
-		fmt.Fprintln(out, "no history yet — cix records every run it observes")
+		fmt.Fprintln(out, "no history yet — ciwatch records every run it observes")
 		return 0
 	}
 

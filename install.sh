@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
-# cix installer — downloads the latest release binary.
-#   curl -fsSL https://raw.githubusercontent.com/Dvorinka/cix/main/install.sh | sh
+# ciwatch installer — downloads the latest release binary.
+#   curl -fsSL https://raw.githubusercontent.com/Dvorinka/ciwatch/main/install.sh | sh
 # Env: CIX_DIR (default ~/.local/bin), CIX_VERSION (default latest)
 set -eu
 
-REPO="Dvorinka/cix"
-TOOL="cix"
+REPO="Dvorinka/ciwatch"
+TOOL="ciwatch"
 DIR="${CIX_DIR:-$HOME/.local/bin}"
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')

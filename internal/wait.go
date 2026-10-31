@@ -36,7 +36,7 @@ type PrevOccurrence struct {
 	TS      string `json:"ts"`
 }
 
-// WaitResult is the cix wait/status JSON contract.
+// WaitResult is the ciwatch wait/status JSON contract.
 type WaitResult struct {
 	RunID      int64               `json:"run_id"`
 	Conclusion string              `json:"conclusion"`
@@ -503,10 +503,10 @@ func notify(enabled bool, code int, run Run) {
 	default:
 		msg = fmt.Sprintf("CI failed — %s (exit %d)", run.Name, code)
 	}
-	if err := exec.Command("notify-send", "cix", msg).Run(); err != nil {
+	if err := exec.Command("notify-send", "ciwatch", msg).Run(); err != nil {
 		// macOS fallback; best-effort, ignore errors
 		_ = exec.Command("osascript", "-e",
-			fmt.Sprintf(`display notification "%s" with title "cix"`, msg)).Run()
+			fmt.Sprintf(`display notification "%s" with title "ciwatch"`, msg)).Run()
 	}
 }
 

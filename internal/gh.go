@@ -194,7 +194,7 @@ func (g *GH) RerunFailed(runID int64) error {
 	return g.apiPost(fmt.Sprintf("repos/%s/actions/runs/%d/rerun-failed-jobs", g.Repo, runID))
 }
 
-// PRHead resolves a PR's head sha and branch — `cix wait --pr N` wants the
+// PRHead resolves a PR's head sha and branch — `ciwatch wait --pr N` wants the
 // run for the PR's head commit, not the repo's HEAD.
 func (g *GH) PRHead(pr int) (string, string, error) {
 	out, err := g.api(fmt.Sprintf("repos/%s/pulls/%d", g.Repo, pr))

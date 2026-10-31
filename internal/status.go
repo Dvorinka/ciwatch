@@ -8,7 +8,7 @@ import (
 	"sort"
 )
 
-// StatusResult is the cix status JSON contract — a one-shot snapshot.
+// StatusResult is the ciwatch status JSON contract — a one-shot snapshot.
 type StatusResult struct {
 	RunID      int64       `json:"run_id"`
 	Status     string      `json:"status"`

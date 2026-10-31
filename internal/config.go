@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// PreflightCheck is one path-globbed local command set from .cix.yml.
+// PreflightCheck is one path-globbed local command set from .ciwatch.yml.
 type PreflightCheck struct {
 	Name     string   `yaml:"name"`
 	Paths    []string `yaml:"paths"`
@@ -24,7 +24,7 @@ type ArtifactCfg struct {
 	RejectGradleTasks  []string `yaml:"reject_gradle_tasks"`
 }
 
-// Config mirrors .cix.yml. All fields optional.
+// Config mirrors .ciwatch.yml. All fields optional.
 type Config struct {
 	Checks       []PreflightCheck `yaml:"checks"`
 	Verify       string           `yaml:"verify"`
@@ -48,10 +48,10 @@ func DefaultConfig() Config {
 	}
 }
 
-// LoadConfig reads .cix.yml if present, else returns defaults.
+// LoadConfig reads .ciwatch.yml if present, else returns defaults.
 func LoadConfig(root string) (Config, error) {
 	cfg := DefaultConfig()
-	p := filepath.Join(root, ".cix.yml")
+	p := filepath.Join(root, ".ciwatch.yml")
 	b, err := os.ReadFile(p)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -61,7 +61,7 @@ func LoadConfig(root string) (Config, error) {
 	}
 	var raw Config
 	if err := yaml.Unmarshal(b, &raw); err != nil {
-		return cfg, fmt.Errorf("malformed .cix.yml: %w", err)
+		return cfg, fmt.Errorf("malformed .ciwatch.yml: %w", err)
 	}
 	if len(raw.Checks) > 0 {
 		cfg.Checks = raw.Checks
@@ -86,7 +86,7 @@ func LoadConfig(root string) (Config, error) {
 	cfg.DefaultRef = raw.DefaultRef
 	cfg.Signatures = raw.Signatures
 	if err := CompileSigRules(cfg.Signatures); err != nil {
-		return cfg, fmt.Errorf(".cix.yml: %w", err)
+		return cfg, fmt.Errorf(".ciwatch.yml: %w", err)
 	}
 	return cfg, nil
 }

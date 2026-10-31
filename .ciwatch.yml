@@ -1,4 +1,4 @@
-# cix self-configuration — also serves as a living example.
+# ciwatch self-configuration — also serves as a living example.
 checks:
   - name: go
     paths: ["**/*.go", "go.mod"]

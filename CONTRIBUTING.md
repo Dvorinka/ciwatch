@@ -16,7 +16,7 @@ non-trivial logic.
    go build ./...
    ```
 
-   (or `cix preflight` — the repo's own `.cix.yml` does exactly this)
+   (or `ciwatch preflight` — the repo's own `.ciwatch.yml` does exactly this)
 
 4. Open a PR describing *why*, not just *what*.
 
@@ -34,5 +34,5 @@ non-trivial logic.
 
 ## Reporting bugs
 
-Include the repo's workflow file shape (needs/matrix/jobs), the `cix`
+Include the repo's workflow file shape (needs/matrix/jobs), the `ciwatch`
 command and `--json` output, and the expected vs actual exit behavior.

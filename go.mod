@@ -1,4 +1,4 @@
-module github.com/Dvorinka/cix
+module github.com/Dvorinka/ciwatch
 
 go 1.27.1
 

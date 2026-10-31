@@ -7,24 +7,24 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Dvorinka/cix/internal"
+	"github.com/Dvorinka/ciwatch/internal"
 )
 
 // version is stamped at release: -ldflags "-X main.version=v0.1.0".
 var version = "dev"
 
-const usage = `cix — CI companion for coding agents
+const usage = `ciwatch — CI companion for coding agents
 
 usage:
-  cix wait      [--run <id>] [--ref <name>] [--pr <n>] [--job <name>]
+  ciwatch wait      [--run <id>] [--ref <name>] [--pr <n>] [--job <name>]
                 [--timeout 45m] [--rerun-flaky] [--notify]
                 [--artifact <path>]... [--json]
-  cix push      [--tag <v> | HEAD] [--cancel-superseded] [wait flags]
-  cix status    [--ref <name> | --pr <n>] [--json]
-  cix preflight [--base <ref>] [--files a.go,b.ts] [--all] [--json]
-  cix history   [--job <name>] [--failures] [--json]
-  cix version
-  cix completion <bash|zsh|fish>
+  ciwatch push      [--tag <v> | HEAD] [--cancel-superseded] [wait flags]
+  ciwatch status    [--ref <name> | --pr <n>] [--json]
+  ciwatch preflight [--base <ref>] [--files a.go,b.ts] [--all] [--json]
+  ciwatch history   [--job <name>] [--failures] [--json]
+  ciwatch version
+  ciwatch completion <bash|zsh|fish>
 
 exit codes: 0 ok · 1 non-gating warnings · 2 gating failure/blocked ·
             3 verify/artifact gate failed · 4 timeout · 5 operational error
@@ -36,7 +36,7 @@ func main() {
 		os.Exit(5)
 	}
 	if os.Args[1] == "version" || os.Args[1] == "--version" || os.Args[1] == "-version" {
-		fmt.Println("cix", version)
+		fmt.Println("ciwatch", version)
 		return
 	}
 	if os.Args[1] == "completion" && len(os.Args) >= 3 {
@@ -174,7 +174,7 @@ func cmdHistory(args []string) int {
 	return internal.History(h, os.Stdout)
 }
 
-// setup wires the gh API and .cix.yml config.
+// setup wires the gh API and .ciwatch.yml config.
 func setup() (*internal.GH, internal.Config, error) {
 	cfg, err := internal.LoadConfig(".")
 	if err != nil {

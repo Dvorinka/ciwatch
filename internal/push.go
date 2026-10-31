@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// PushOpts controls cix push.
+// PushOpts controls ciwatch push.
 type PushOpts struct {
 	Tag              string // push this tag instead of the branch
 	CancelSuperseded bool

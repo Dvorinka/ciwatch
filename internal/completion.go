@@ -21,10 +21,10 @@ func Completion(shell string) (string, error) {
   esac
   COMPREPLY=($(compgen -W "--run --ref --pr --job --timeout --rerun-flaky --notify --artifact --tag --cancel-superseded --base --files --all --failures --gate --json" -- "$cur"))
 }
-complete -F _cix cix
+complete -F _cix ciwatch
 `, nil
 	case "zsh":
-		return `#compdef cix
+		return `#compdef ciwatch
 _cix() {
   local -a cmds=(wait push status preflight history version completion)
   if (( CURRENT == 2 )); then
@@ -52,23 +52,23 @@ _cix() {
 _cix "$@"
 `, nil
 	case "fish":
-		return `complete -c cix -n '__fish_use_subcommand' -a 'wait push status preflight history version completion'
-complete -c cix -l run -r -d 'run id'
-complete -c cix -l ref -r -d 'branch or tag'
-complete -c cix -l pr -r -d 'pull request number'
-complete -c cix -l job -r -d 'single job'
-complete -c cix -l timeout -r -d 'max wait'
-complete -c cix -l rerun-flaky -d 'rerun transient failure'
-complete -c cix -l notify -d 'desktop notification'
-complete -c cix -l artifact -r -F -d 'artifact path'
-complete -c cix -l tag -r -d 'tag or HEAD'
-complete -c cix -l cancel-superseded -d 'cancel older runs'
-complete -c cix -l base -r -d 'base ref'
-complete -c cix -l files -r -d 'changed files'
-complete -c cix -l all -d 'all checks'
-complete -c cix -l failures -d 'failures only'
-complete -c cix -l gate -r -d 'gate job'
-complete -c cix -l json -d 'structured output'
+		return `complete -c ciwatch -n '__fish_use_subcommand' -a 'wait push status preflight history version completion'
+complete -c ciwatch -l run -r -d 'run id'
+complete -c ciwatch -l ref -r -d 'branch or tag'
+complete -c ciwatch -l pr -r -d 'pull request number'
+complete -c ciwatch -l job -r -d 'single job'
+complete -c ciwatch -l timeout -r -d 'max wait'
+complete -c ciwatch -l rerun-flaky -d 'rerun transient failure'
+complete -c ciwatch -l notify -d 'desktop notification'
+complete -c ciwatch -l artifact -r -F -d 'artifact path'
+complete -c ciwatch -l tag -r -d 'tag or HEAD'
+complete -c ciwatch -l cancel-superseded -d 'cancel older runs'
+complete -c ciwatch -l base -r -d 'base ref'
+complete -c ciwatch -l files -r -d 'changed files'
+complete -c ciwatch -l all -d 'all checks'
+complete -c ciwatch -l failures -d 'failures only'
+complete -c ciwatch -l gate -r -d 'gate job'
+complete -c ciwatch -l json -d 'structured output'
 `, nil
 	}
 	return "", fmt.Errorf("unknown shell %q — use bash, zsh, or fish", shell)

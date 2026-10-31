@@ -26,10 +26,10 @@ jobs:
       - name: build
         run: |
           ver=${GITHUB_REF_NAME}
-          out=cix-${ver}-${{ matrix.goos }}-${{ matrix.goarch }}
+          out=ciwatch-${ver}-${{ matrix.goos }}-${{ matrix.goarch }}
           [ "${{ matrix.goos }}" = windows ] && out=$out.exe
           CGO_ENABLED=0 GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
-            go build -ldflags "-s -w -X main.version=$ver" -o "$out" ./cmd/cix
+            go build -ldflags "-s -w -X main.version=$ver" -o "$out" ./cmd/ciwatch
       - uses: softprops/action-gh-release@v3
         with:
-          files: cix-*
+          files: ciwatch-*
